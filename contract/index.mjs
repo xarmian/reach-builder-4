@@ -86,12 +86,9 @@ const stdlib = loadStdlib();
       }
     }
 
-    await createBob('Bob1');
-    await createBob('Bob2');
-    await createBob('Bob3');
-    await createBob('Bob4');
-    await createBob('Bob5');
-    await createBob('Bob6');
+    for(let i = 1; i <= 6; i++) {
+      await createBob(`Bob${i}`);
+    }
 
   }
 
