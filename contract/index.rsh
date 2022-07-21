@@ -25,6 +25,7 @@ export const main = Reach.App(() => {
 
   const V = View({
     seeAttachers: Array(Address,MAXATTACHERS),
+    seeDeployerAddress: Address,
   });
 
   init();
@@ -37,6 +38,7 @@ export const main = Reach.App(() => {
   });
   Deployer.publish();
 
+  V.seeDeployerAddress.set(Deployer);
   const initialAttachers = Array.replicate(MAXATTACHERS, Deployer);
   
   const [ done, numAttached, attachers ] = parallelReduce([ false, 0, initialAttachers ])

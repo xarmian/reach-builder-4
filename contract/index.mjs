@@ -45,26 +45,36 @@ const stdlib = loadStdlib();
     const ctcInfoA = await ask.ask(`Enter the contract string:`,JSON.parse);
 
     const createBob = async (who) => {
-      const acc = await createAccount(who);
       console.log('');
 
+      const acc = await createAccount(who);
       console.log(`${who} is joining the contract...`);
       const ctcAttacher = acc.contract(backend, ctcInfoA);
   
+      const deployerAddress = stdlib.formatAddress((await ctcAttacher.v.seeDeployerAddress())[1]);
+      console.log(`${who} sees that ${deployerAddress} deployed the contract`);
+
       // read view of current attachers array
       const attArray = await ctcAttacher.v.seeAttachers();
       if (attArray[0] === 'Some') {
         console.log(`${who} uses a View to see the current Attachers:`);
+
+        let cnt = 0;
         for(let i in attArray[1]) {
-          console.log(' '+(parseInt(i)+1)+': '+stdlib.formatAddress(attArray[1][i]));
+          const addr = stdlib.formatAddress(attArray[1][i]);
+          if (addr === deployerAddress) continue; // skip if it's the deployer's address
+
+          cnt++;
+          console.log(' '+cnt+': '+addr);
         }
-      }
-      else {
-        console.log(`${who} sees that there is not anyone attached yet.`);
+
+        if (cnt === 0) {
+          console.log(`${who} sees that no one has attached yet.`);
+        }
       }
   
       // request to attach
-      console.log(`${who} is sending an API Request to attach to contract...`);
+      console.log(`${who} is doing an API Request to attach to the contract...`);
       const didAttach = await ctcAttacher.a.UserAPI.attach();
   
       if (!didAttach) {
