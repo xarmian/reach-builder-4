@@ -9,10 +9,18 @@ export const main = Reach.App(() => {
 
   setOptions({ connectors: [ ALGO ], untrustworthyMaps: true });
   
-  const Deployer = Participant('Deployer', {
+  const Common = {
     notifyDeployed: Fun([], Null),
+  }
+
+  const Deployer = Participant('Deployer', {
+    ...Common,
     seeAttachment: Fun([Address], Null),
     seeAttachmentFail: Fun([Address], Null),
+  });
+
+  const Attachers = ParticipantClass('Attachers', {
+    ...Common,
   });
   
   const UserAPI = API('UserAPI', {
@@ -31,19 +39,14 @@ export const main = Reach.App(() => {
   init();
 
   Deployer.publish();
-  commit();
-
-  Deployer.only(() => {
-    interact.notifyDeployed();
-  });
-  Deployer.publish();
-
   V.seeDeployerAddress.set(Deployer);
+  each([ Deployer, Attachers ], () => interact.notifyDeployed());
+
   const initialAttachers = Array.replicate(MAXATTACHERS, Deployer);
   
   const [ done, numAttached, attachers ] = parallelReduce([ false, 0, initialAttachers ])
       .define(() => { 
-        V.seeAttachers.set(attachers); 
+        V.seeAttachers.set(attachers);
       })
       .invariant(numAttached <= MAXATTACHERS)
       .while(!done)
