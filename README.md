@@ -7,8 +7,8 @@ https://drive.google.com/file/d/1DljCU2Hbhp7vewmizb7vzJ2eyHdCntdC/view
 
 To run the test suite:
 
-`cd contract`
-`reach run`
+`cd contract`  
+`reach run`  
 
 The test suite may be run in either interactive
 or non-interactive (single-terminal) modes
