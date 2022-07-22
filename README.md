@@ -1,4 +1,4 @@
-# Reach Builder Challenge Week 4
+# Reach Builder Challenge Week 4 - Level 2
 
 This project was created based on the Reach Builder Week 4 Challenge.
 The specifications of the challenge can be found here:
