@@ -16,10 +16,6 @@ export const main = Reach.App(() => {
     seeAttachmentFail: Fun([Address], Null),
   });
 
-  const Attachers = ParticipantClass('Attachers', {
-    ...Common,
-  });
-  
   const UserAPI = API('UserAPI', {
     attach: Fun([], Bool),
   });
@@ -31,13 +27,14 @@ export const main = Reach.App(() => {
   const V = View({
     seeAttachers: Array(Address,MAXATTACHERS),
     seeDeployerAddress: Address,
+    // isDeployed: Bool,
   });
 
   init();
 
   Deployer.publish();
   V.seeDeployerAddress.set(Deployer);
-  each([ Deployer, Attachers ], () => interact.notifyDeployed());
+  Deployer.interact.notifyDeployed();
 
   const initialAttachers = Array.replicate(MAXATTACHERS, Deployer);
   

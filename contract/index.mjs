@@ -97,52 +97,44 @@ const interactive = (async () => {
 
 const noninteractive = (async () => {
   const createBob = async (who,ctcInfo) => {
+    console.log('');
     const acc = await createAccount(who);
+
     console.log(`${who} is joining the contract...`);
     const ctcAttacher = acc.contract(backend, ctcInfo);
 
-    Promise.all([
-      backend.Attachers(ctcAttacher, {
-        notifyDeployed: async () => {
-          console.log('');
+    const deployerAddress = stdlib.formatAddress((await ctcAttacher.v.seeDeployerAddress())[1]);
+    console.log(`${who} sees that ${deployerAddress} deployed the contract`);
 
-          const deployerAddress = stdlib.formatAddress((await ctcAttacher.v.seeDeployerAddress())[1]);
-          console.log(`${who} sees that ${deployerAddress} deployed the contract`);
-      
-          // read view of current attachers array
-          const attArray = await ctcAttacher.v.seeAttachers();
-          if (attArray[0] === 'Some') {
-            console.log(`${who} uses a View to see the current Attachers:`);
-      
-            let cnt = 0;
-            for(let i in attArray[1]) {
-              const addr = stdlib.formatAddress(attArray[1][i]);
-              if (addr === deployerAddress) continue; // skip if it's the deployer's address
-      
-              cnt++;
-              console.log(' '+cnt+': '+addr);
-            }
-      
-            if (cnt === 0) {
-              console.log(`${who} sees that no one has attached yet.`);
-            }
-          }
-      
-          // request to attach
-          console.log(`${who} is doing an API Request to attach to the contract...`);
-          const didAttach = await ctcAttacher.a.UserAPI.attach();
-      
-          if (!didAttach) {
-            console.log(`${who} is unable to attach to the contract. It has reached the maximum number of attachers.`);
-          }
-          else {
-            console.log(`${who} has successfully attached to the contract.`);
-          }
+    // read view of current attachers array
+    const attArray = await ctcAttacher.v.seeAttachers();
+    if (attArray[0] === 'Some') {
+      console.log(`${who} uses a View to see the current Attachers:`);
 
-          return Promise.resolve();
-        },
-      }),
-    ]);
+      let cnt = 0;
+      for(let i in attArray[1]) {
+        const addr = stdlib.formatAddress(attArray[1][i]);
+        if (addr === deployerAddress) continue; // skip if it's the deployer's address
+
+        cnt++;
+        console.log(' '+cnt+': '+addr);
+      }
+
+      if (cnt === 0) {
+        console.log(`${who} sees that no one has attached yet.`);
+      }
+    }
+
+    // request to attach
+    console.log(`${who} is doing an API Request to attach to the contract...`);
+    const didAttach = await ctcAttacher.a.UserAPI.attach();
+
+    if (!didAttach) {
+      console.log(`${who} is unable to attach to the contract. It has reached the maximum number of attachers.`);
+    }
+    else {
+      console.log(`${who} has successfully attached to the contract.`);
+    }  
   }
 
   // ============= Program Output Begins ==============
