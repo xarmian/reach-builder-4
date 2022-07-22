@@ -2,13 +2,10 @@
 'use strict';
 
 /* eslint-disable */
-const myFromMaybe = (m) => fromMaybe(m, (() => false), ((x) => x));
 const MAXATTACHERS = 5;
 
 export const main = Reach.App(() => {
 
-  setOptions({ connectors: [ ALGO ], untrustworthyMaps: true });
-  
   const Common = {
     notifyDeployed: Fun([], Null),
   }
