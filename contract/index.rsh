@@ -27,7 +27,6 @@ export const main = Reach.App(() => {
   const V = View({
     seeAttachers: Array(Address,MAXATTACHERS),
     seeDeployerAddress: Address,
-    // isDeployed: Bool,
   });
 
   init();
